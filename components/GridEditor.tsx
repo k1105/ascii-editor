@@ -109,8 +109,8 @@ export default function GridEditor() {
 
   // 印字可能文字かどうかの判定
   const isPrintable = useCallback((key: string) => {
-    // 1文字のキー入力（Space含む）を印字可能として扱う
-    return key.length === 1 && key >= ' ' && key <= '~';
+    // 1文字のキー入力（Spaceは除く）を印字可能として扱う
+    return key.length === 1 && key > ' ' && key <= '~';
   }, []);
 
   const handleKeyDown = useCallback(
@@ -146,16 +146,9 @@ export default function GridEditor() {
           break;
         }
         case " ": {
-          // Spaceキーは印字可能文字として上で処理されるが、
-          // クリック時のトグル動作と区別するため、ここでも明示的に処理
-          if (e.target === target) {
-            // キーボード入力の場合は印字として扱う（上で処理済み）
-            return;
-          } else {
-            // クリックイベントの場合はトグル
-            e.preventDefault();
-            toggleCell(currentR, currentC);
-          }
+          e.preventDefault();
+          // Spaceキーはトグル動作を維持
+          toggleCell(currentR, currentC);
           break;
         }
         case "ArrowUp": {
