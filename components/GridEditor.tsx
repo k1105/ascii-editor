@@ -35,8 +35,8 @@ const GridCell = React.memo(
           alignItems: "center",
           justifyContent: "center",
           border: "1px solid #e5e7eb",
-          backgroundColor: "#fff",
-          color: "#000",
+          backgroundColor: char === "█" ? "#000" : "#f9f9f9",
+          color: "#333",
           cursor: "pointer",
           padding: 0,
           margin: 0,
@@ -111,7 +111,6 @@ export default function GridEditor() {
         style={{
           gridTemplateColumns: `repeat(${cols}, ${pixelSize}px)`,
           gridAutoRows: `${pixelSize}px`,
-          gap: "1px",
           justifyContent: "start",
           alignContent: "start",
           overflow: "auto",
