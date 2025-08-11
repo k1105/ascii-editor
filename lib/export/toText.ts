@@ -32,8 +32,11 @@ export function gridToText(
         return cell; // 任意文字はそのまま
       }).join('');
     } else {
-      // 通常モード：そのまま出力（行末スペースも保持）
-      return row.join('');
+      // 通常モード：スペースをem spaceに置換して幅を調整
+      return row.map(cell => {
+        if (cell === ' ') return '\u2003'; // em space for better width matching
+        return cell;
+      }).join('');
     }
   });
 

@@ -24,14 +24,23 @@ export default function PreviewPane() {
     return getTextStats(outputText);
   }, [outputText]);
 
-  // プレビュー用テキスト（空白可視化対応）
+  // プレビュー用テキスト（スペース幅調整＋空白可視化対応）
   const previewText = useMemo(() => {
-    if (!showWhitespace) return outputText;
+    let text = outputText;
     
-    // 行末スペースを可視化（· で表示）
-    return outputText.split(/\r\n|\n|\r/).map(line => {
-      return line.replace(/ +$/, (match) => '·'.repeat(match.length));
-    }).join('\n');
+    if (!showWhitespace) {
+      // スペースをem spaceに置換（幅調整用）
+      text = text.replace(/ /g, '\u2003'); // em space
+    } else {
+      // 行末スペースを可視化（· で表示）
+      text = text.split(/\r\n|\n|\r/).map(line => {
+        return line.replace(/ +$/, (match) => '·'.repeat(match.length));
+      }).join('\n');
+      // 行末以外のスペースも幅調整
+      text = text.replace(/ (?!·)/g, '\u2003');
+    }
+    
+    return text;
   }, [outputText, showWhitespace]);
 
   // クリップボードコピー
@@ -154,7 +163,9 @@ export default function PreviewPane() {
           className="whitespace-pre font-mono text-xs p-2 h-full overflow-auto"
           style={{ 
             lineHeight: '1.2',
-            tabSize: 1
+            tabSize: 1,
+            fontFamily: 'Consolas, "Courier New", monospace',
+            fontSize: '11px'
           }}
         >
           {previewText}
